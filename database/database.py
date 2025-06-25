@@ -1,14 +1,10 @@
-from typing import Optional, Union
+from datetime import date
 
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
-    mapped_column,
-    relationship)
-from datetime import date
-from sqlalchemy.sql import func
-from sqlalchemy import ForeignKey
-
+    mapped_column, relationship)
 
 
 class Base(DeclarativeBase):
@@ -25,6 +21,7 @@ class Client(Base):
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
 
+
 class Project(Base):
     __tablename__ = 'project'
 
@@ -35,10 +32,12 @@ class Project(Base):
     progress: Mapped[int]
     completion: Mapped[date | None]
 
+
 class Department(Base):
     __tablename__ = 'department'
 
     name: Mapped[str]
+
 
 class Employee(Base):
     __tablename__ = 'employee'
@@ -49,10 +48,11 @@ class Employee(Base):
     middlename: Mapped[str]
     salary: Mapped[int]
     hire_date: Mapped[date]
+    department: Mapped["Department"] = relationship(lazy="joined")
+
 
 class ProjectEmployment(Base):
     __tablename__ = 'project_employment'
 
     project_id: Mapped[int] = mapped_column(ForeignKey(Project.id))
     employee_id: Mapped[int] = mapped_column(ForeignKey(Employee.id))
-
